@@ -81,10 +81,11 @@ flatpak install flathub com.spotify.Client
 echo "Downloading OBS Studio"
 flatpak install flathub com.obsproject.Studio
 
-echo "Downloading Obsidian"
-wget https://github.com/obsidianmd/obsidian-releases/releases/download/v1.6.7/Obsidian-1.6.7.AppImage
-chmod +x Obsidian-1.6.7.AppImage
-sudo mv Obsidian-1.6.7.AppImage /usr/local/bin/Obsidian
+# This is weird and does not work how I want it to, just download manually from app store for now
+# echo "Downloading Obsidian"
+# wget https://github.com/obsidianmd/obsidian-releases/releases/download/v1.6.7/Obsidian-1.6.7.AppImage
+# chmod +x Obsidian-1.6.7.AppImage
+# sudo mv Obsidian-1.6.7.AppImage /usr/local/bin/Obsidian
 
 echo "Downloading Signal Desktop"
 flatpak install flathub org.signal.Signal
