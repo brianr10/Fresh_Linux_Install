@@ -73,7 +73,7 @@ echo "Downloading XFreeRDP"
 sudo $pkg_manager install freerdp-x11
 
 echo "Downloading necessary packages"
-sudo $pkg_manager install neofetch htop nvtop git wget curl vim steam qemu-kvm qemu-utils libvirt-daemon-system libvirt-clients bridge-utils virt-managerovmf timeshift bleachbit vlc gimp gparted cmake discord ufw tmux ffmpeg -y
+sudo $pkg_manager install neofetch htop nvtop git wget curl vim steam qemu-kvm qemu-utils libvirt-daemon-system libvirt-clients bridge-utils virt-managerovmf timeshift bleachbit vlc gimp gparted cmake discord ufw tmux ffmpeg python3 -y
 
 echo "Downloading Spotify"
 flatpak install flathub com.spotify.Client
@@ -89,6 +89,13 @@ sudo mv Obsidian-1.6.7.AppImage /usr/local/bin/Obsidian
 echo "Downloading Signal Desktop"
 flatpak install flathub org.signal.Signal
 
+echo "Downloading PDFChain"
+sudo flatpak install pdfchain
+
+
+
+sudo $pkg_manager update -y
+sudo $pkg_manager upgrade -y
 echo "Done for now..."
 echo "More things will be added later"
-echo "Signing off, goodbye...
+echo "Signing off, goodbye..."
