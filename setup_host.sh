@@ -33,11 +33,13 @@ echo "==============================="
 sudo $pkg_manager update -y
 sudo $pkg_manager upgrade -y
 
+# GitHub for post install on Fedora: https://github.com/devangshekhawat/Fedora-40-Post-Install-Guide
 echo "Downloading Fedora things..."
 if [ "$distro" = "Fedora Linux" ]; then
-	echo -e "fastestmirror=True\nmax_parallel_downloadss=10\ndefaultyes=True\nkeepcache=True" | sudo tee -a /etc/dnf/dnf.conf
+	echo -e "fastestmirror=True\nmax_parallel_downloadss=10\ndefaultyes=True\nkeepcache=True\ngpgcheck=1\nclean_requirements_on_remove=True\nbest=False\nskip_if_unavailable=True\ndeltarpm=True" | sudo tee -a /etc/dnf/dnf.conf
 	sudo $pkg_manager clean all
 	sudo $pkg_manager update -y
+	sudo $pkg_manager -y upgrade --refresh
 	sudo dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 	sudo dnf config-manager --enable fedora-cisco-openh264
 	sudo rpm-ostree install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
@@ -48,6 +50,19 @@ if [ "$distro" = "Fedora Linux" ]; then
 	sudo dnf groupinstall "Development Tools" "Development Libraries" -y
 	sudo dnf groupinstall "C Development Tools and Libraries" -y
 	sudo dnf install libXcomposite libXcursor libXi libXtst libXrandr alsa-lib mesa-libEGL libXdamage mesa-libGL libXScrnSaver
+	sudo dnf swap "ffmpeg-free" "ffmpeg" --allowerasing
+	sudo dnf @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin
+	sudo dnf update @sound-and-video # Installs useful Sound and Video complement packages.
+	sudo dnf install Multimedia
+	sudo dnf install ffmpeg ffmpeg-libs libva libva-utils
+	sudo dnf swap mesa-va-drivers mesa-va-drivers-freeworld
+	sudo dnf swap mesa-vdpau-drivers mesa-vdpau-drivers-freeworld
+	sudo dnf config-manager --set-enabled fedora-cisco-openh264
+	sudo dnf install -y openh264 gstreamer1-plugin-openh264 mozilla-openh264
+	echo "After installing OpenH264, enable the plugin in Firefox's settings"
+	sudo timedatectl set-local-rtc '0'
+	sudo dnf install -y unzip p7zip p7zip-plugins unrar
+	
 fi
 
 echo "Downloading Calibre Library"
@@ -57,7 +72,8 @@ sudo -v && wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | 
 # This is the website should you need to do this manually
 echo "Downloading Flatpak"
 if $pkg_manager="dnf"; then
-	flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+	flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+	# flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 	wget https://code.visualstudio.com/docs/?dv=linux64_rpm
 	sudo dnf install code*.x86_64.rpm -y
 elif $pkg_manager="apt"; then
